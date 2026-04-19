@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 document.querySelectorAll('.nav-links a').forEach(link => {
   link.addEventListener('click', function (e) {
@@ -52,3 +53,13 @@ window.addEventListener('scroll', () => {
 
 // Keeps page stable on reload
 window.history.scrollRestoration = "manual";
+=======
+// Smooth scroll fix for older browsers (optional)
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener("click", function (e) {
+    e.preventDefault();
+    document.querySelector(this.getAttribute("href"))
+      .scrollIntoView({ behavior: "smooth" });
+  });
+});
+>>>>>>> ac9f80e582387faed996e3a3c79d9c90a6dc4a98
