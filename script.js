@@ -1,65 +1,84 @@
-<<<<<<< HEAD
+document.addEventListener("DOMContentLoaded", function () {
 
-document.querySelectorAll('.nav-links a').forEach(link => {
-  link.addEventListener('click', function (e) {
-    e.preventDefault();
+  const contactForm = document.getElementById("contactForm");
 
-    const targetId = this.getAttribute('href');
-    const targetSection = document.querySelector(targetId);
+  if (!contactForm) return;
 
-    if (targetSection) {
-      targetSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
+  contactForm.addEventListener("submit", async function (e) {
+
+    // Get values
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const message = document.getElementById("message").value.trim();
+
+    // Basic validation
+    if (!name || !email || !message) {
+      alert("⚠️ Please fill all fields");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, email, message })
       });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // SUCCESS MESSAGE
+        alert("✅ Message sent successfully! Thanks for reaching out.");
+
+        // reset form
+        contactForm.reset();
+      } else {
+        alert("❌ Failed to send message. Try again.");
+      }
+
+    } catch (error) {
+      console.error("Error:", error);
+      alert("❌ Server not responding. Please try again later.");
     }
   });
+
 });
+const form = document.querySelector(".contact-form");
+const successMessage = document.querySelector(".success-message");
 
-const sections = document.querySelectorAll('section');
-const navLinks = document.querySelectorAll('.nav-links a');
-
-window.addEventListener('scroll', () => {
-  let currentSection = '';
-
-  sections.forEach(section => {
-    const sectionTop = section.offsetTop - 120;
-    const sectionHeight = section.offsetHeight;
-
-    if (window.scrollY >= sectionTop &&
-        window.scrollY < sectionTop + sectionHeight) {
-      currentSection = section.getAttribute('id');
-    }
-  });
-
-  navLinks.forEach(link => {
-    link.classList.remove('active');
-
-    if (link.getAttribute('href') === `#${currentSection}`) {
-      link.classList.add('active');
-    }
-  });
+form.addEventListener("submit", function () {
+  setTimeout(() => {
+    form.style.display = "none";
+    successMessage.style.display = "block";
+  }, 1000);
 });
+const form = document.getElementById("contactForm");
+const successMessage = document.getElementById("formSuccess");
 
-const navbar = document.querySelector('.navbar');
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 10) {
-    navbar.classList.add('scrolled');
+  const formData = new FormData(form);
+
+  const response = await fetch(form.action, {
+    method: "POST",
+    body: formData,
+    headers: { Accept: "application/json" }
+  });
+
+  if (response.ok) {
+    form.reset();
+
+    // Hide inputs & button
+    Array.from(form.elements).forEach(el => {
+      if (el.tagName !== "P") el.style.display = "none";
+    });
+
+    // Show success message
+    successMessage.style.display = "block";
   } else {
-    navbar.classList.remove('scrolled');
+    alert("Something went wrong. Please try again.");
   }
 });
-
-// Keeps page stable on reload
-window.history.scrollRestoration = "manual";
-=======
-// Smooth scroll fix for older browsers (optional)
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener("click", function (e) {
-    e.preventDefault();
-    document.querySelector(this.getAttribute("href"))
-      .scrollIntoView({ behavior: "smooth" });
-  });
-});
->>>>>>> ac9f80e582387faed996e3a3c79d9c90a6dc4a98
